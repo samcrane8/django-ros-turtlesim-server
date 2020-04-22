@@ -1,0 +1,72 @@
+<!-- chat/templates/chat/room.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Room</title>
+</head>
+<body>
+    <div id="chat-log" cols="100" rows="20"></div><br>
+    <input id="chat-message-input" type="text" size="100"><br>
+    <canvas id="myCanvas" height="500" width="500" style="border: 1px solid black"></canvas>
+    {{ room_name|json_script:"room-name" }}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/robot/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+
+            // Store the current transformation matrix
+            ctx.save();
+
+            // Use the identity matrix while clearing the canvas
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Restore the transform
+            ctx.restore();
+
+            ctx.save();
+             ctx.translate(data.message.x * 25,canvas.height - data.message.y * 25)
+             ctx.rotate(0.5*Math.PI - data.message.theta)
+             ctx.beginPath();
+             ctx.moveTo(0, 0);
+             ctx.lineTo(-10, 10);
+             ctx.lineTo(10, 10);
+             ctx.closePath();
+             ctx.stroke();
+             ctx.restore();
+            document.querySelector('#chat-log').innerHTML = (JSON.stringify(data.message) + '\n');
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        };
+    </script>
+</body>
+</html>
