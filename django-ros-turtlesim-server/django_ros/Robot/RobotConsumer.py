@@ -32,13 +32,13 @@ class RobotConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'chat_message',
+                'type': 'topic_message',
                 'message': message
             }
         )
 
     # Receive message from room group
-    async def chat_message(self, event):
+    async def topic_message(self, event):
         message = event['message']
 
         # Send message to WebSocket

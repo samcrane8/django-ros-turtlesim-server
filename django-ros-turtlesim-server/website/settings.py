@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'toto.urls'
+ROOT_URLCONF = 'website.urls'
 
 TEMPLATES = [
     {
@@ -70,8 +70,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'toto.wsgi.application'
-ASGI_APPLICATION = "toto.routing.application"
+WSGI_APPLICATION = 'website.wsgi.application'
+ASGI_APPLICATION = "website.routing.application"
 
 CHANNEL_LAYERS = {
     'default': {
