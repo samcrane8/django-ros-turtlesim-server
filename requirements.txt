@@ -6,7 +6,7 @@ djangorestframework==3.11.0
 django-cors-headers==3.2.0
 django-cors-middleware==1.5.0
 roslibpy==0.7.1
-drf-jwt==1.13.4
+drf-jwt==1.15.1
 pyjwt==1.7.1
 requests==2.22.0
 schema==0.7.1
