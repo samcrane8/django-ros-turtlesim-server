@@ -1,4 +1,4 @@
-Django==3.0.3
+Django==3.1.9
 twilio==6.35.1
 gunicorn==20.0.4
 psycopg2-binary==2.8.4
